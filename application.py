@@ -141,16 +141,9 @@ def generate_solution_json(taylor_data, euler_data, runge_kutta_data):
 @application.route('/analize_equation', methods=['POST'])
 def analizar_ecuacion():
     data = request.get_json()
-    equation = data['equation']
+    equation = data['expr']
 
     homogeneous = isHomogeneous(equation)
-    eq = eval('lambda x, y: ' + equation.replace('^', '**'))
-
-    # Definir condiciones iniciales y parámetros
-    x0 = 0  # Punto inicial
-    y0 = 1  # Valor inicial de y en x0
-    N = 10  # Número de pasos
-    xf = 1  # Punto final
 
     if not homogeneous:
         result = {
@@ -158,6 +151,14 @@ def analizar_ecuacion():
         'message': 'La ecuación no es homogenea'
         }
         return jsonify(result)
+
+    eq = eval('lambda x, y: ' + equation.replace('^', '**'))
+
+    # Definir condiciones iniciales y parámetros
+    x0 = 0  # Punto inicial
+    y0 = 1  # Valor inicial de y en x0
+    N = 10  # Número de pasos
+    xf = 1  # Punto final
 
     x_euler, y_euler = euler(eq, x0, y0, N, xf)
 
@@ -167,3 +168,6 @@ def analizar_ecuacion():
 
     resultJson = generate_solution_json((x_taylor, y_taylor), (x_euler, y_euler), (x_rk, y_rk))
     return jsonify(resultJson)
+
+if __name__ == '__main__':
+    application.run(debug=True)
