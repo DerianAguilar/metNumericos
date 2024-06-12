@@ -166,8 +166,7 @@ def analizar_ecuacion():
 
     x_taylor, y_taylor = taylor_method(eq, x0, y0, N, xf)
 
-    resultJson = generate_solution_json((x_taylor, y_taylor), (x_euler, y_euler), (x_rk, y_rk))
-    return jsonify(resultJson)
+    return generate_solution_json((x_taylor, y_taylor), (x_euler, y_euler), (x_rk, y_rk))
 
 if __name__ == '__main__':
     application.run(debug=True)
